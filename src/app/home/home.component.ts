@@ -18,19 +18,19 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.calculadoraFIIForm = this.formBuilder.group({
-      valorCota: ['100', Validators.required],
-      rendimentoCota: ['0.5', Validators.required],
-      cotasCompradasPorMes: ['10', Validators.required],
-      mesInicial: ['2020-02', Validators.required],
-      mesProjecao: ['2023-03'],
-      cotaAtual: ['30', Validators.required],
-      comprarCotaComRendimentos: [true],
-      tipoCompraCotaComRendimentos : ['acumulado', Validators.required],
+      valorCota: ['', Validators.required],
+      rendimentoCota: ['', Validators.required],
+      cotasCompradasPorMes: ['', Validators.required],
+      mesInicial: ['', Validators.required],
+      mesProjecao: [''],
+      cotaAtual: ['0', Validators.required],
+      comprarCotaComRendimentos: [false],
+      tipoCompraCotaComRendimentos : ['doMes'],
       criterioParada: ['salario', Validators.required],
-      salario: ['100'],
-      montante: ['1000'],
-      condicionalMes: ['1'],
-      condicionalNumeroCotas: ['30']
+      salario: [''],
+      montante: [''],
+      condicionalMes: ['0'],
+      condicionalNumeroCotas: ['']
     })
   }
 
