@@ -1,0 +1,70 @@
+<button
+  type="button"
+  (click)="novaSimulacao()"
+  class="btn btn-primary btn-block mb-3"
+  *ngIf="rendimentos.length"
+>
+  Nova Simulação
+</button>
+<h5>Total Pago: {{totalPago() | dinheiro}}</h5>
+
+<h5>Total Recebido: {{totalRecebido() | dinheiro}}</h5>
+
+<h5>Pagamento Mensal a receber: {{getSalario() | dinheiro}}</h5>
+
+<h5>Dinheiro acumulado: {{getMontante() | dinheiro}}</h5>
+
+<h5>Recebido acumulado supera total pago em: {{recebidoSuperaPago() | monthToYear}}</h5>
+<small>* Utilizando salário e montante atuais e sem alterações.</small>
+<hr>
+<table class="table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th scope="col">Mês/Ano</th>
+      <th scope="col">Número de Cotas Compradas</th>
+      <th scope="col">Número de Cotas Acumuladas</th>
+      <th scope="col">Gasto do mês</th>
+      <th scope="col">Gasto do mês Acumulado</th>
+      <th scope="col">Rendimento do mês</th>
+      <th scope="col">Rendimento do mês Acumulado</th>
+      <th scope="col">Cotas Compradas com Rendimentos</th>
+      <th scope="col">Balanço</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr mdbTableCol *ngFor="let rendimento of rendimentos; let i=index">
+      <th scope="row">{{rendimento.mesAno}}</th>
+      <td>{{rendimento.cotasCompradas}}</td>
+      <td>{{rendimento.cotasAcumuladas}}</td>
+      <td
+        style="color: white; background-color: #E82F25"
+      >
+      <!-- <td> -->
+        {{rendimento.gastoDoMes | dinheiro}}
+      </td>
+      <td
+        style="color: white; background-color: #E82F25"
+      >
+        {{rendimento.gastoAcumulado | dinheiro}}
+      </td>
+      <td
+        style="color: white; background-color: #00B630"
+      >
+      <!-- <td> -->
+        {{rendimento.doMes | dinheiro}}
+      </td>
+      <td
+        style="color: white; background-color: #00B630"
+      >
+        {{rendimento.acumulado | dinheiro}}
+      </td>
+      <td>{{rendimento.cotasCompradasComRendimentos}}</td>
+      <td
+        style="color: white;"
+        [ngStyle]="{'background-color': getBalanco(i) > 0 ? '#00B630' : '#E82F25' }"
+      >
+        {{getBalanco(i) | dinheiro}}
+      </td>
+    </tr>
+  </tbody>
+</table>

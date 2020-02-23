@@ -1,0 +1,162 @@
+<div class="container my-5">
+  <div class="my-5">
+      <h1>Calculadora de F.I.I.</h1>
+  </div>
+
+  <form
+    [formGroup]="calculadoraFIIForm"
+    *ngIf="!rendimentos.length"
+  >
+
+    <!-- Quantidade de cotas atualmente -->
+    <div class="form-group">
+      <label for="cotaAtual">Quantidade de cotas atualmente</label>
+      <input type="number" class="form-control" id="cotaAtual" formControlName="cotaAtual">
+      <small id="cotaAtual" class="form-text text-muted">Adicione a quantidade de cotas que você possui hoje.</small>
+    </div>
+
+    <!-- Valor da Cota -->
+    <div class="form-group">
+      <label for="valorCota">Valor da Cota</label>
+      <input type="number" class="form-control" id="valorCota" formControlName="valorCota">
+      <small id="valorCota" class="form-text text-muted">Valor da cota desejada.</small>
+    </div>
+
+    <!-- Rendimento da Cota -->
+    <div class="form-group">
+      <label for="rendimentoCota">Rendimento da Cota</label>
+      <input type="number" class="form-control" id="rendimentoCota" formControlName="rendimentoCota">
+      <small id="rendimentoCota" class="form-text text-muted">Rendimento da cota desejada.</small>
+    </div>
+
+    <!-- Cotas Compradas por Mês -->
+    <div class="form-group">
+      <label for="cotasCompradasPorMes">Cotas compradas por mês</label>
+      <input type="number" class="form-control" id="cotasCompradasPorMes" formControlName="cotasCompradasPorMes">
+      <small id="cotasCompradasPorMes" class="form-text text-muted">Mensalmente você comprará essa quantidade de cotas.</small>
+    </div>
+
+    <!-- Mês de Início -->
+    <div class="form-group">
+      <label for="mesInicial">Mês de início</label>
+      <input type="month" class="form-control" id="mesInicial" formControlName="mesInicial">
+      <small id="mesInicial" class="form-text text-muted">Mês em que você iniciará a simulação</small>
+    </div>
+
+    <!-- Critério de Parada -->
+    <div class="form-group">
+      <label for="criterioParada">Critério de parada</label>
+      <select
+        class="d-block"
+        id="criterioParada"
+        formControlName="criterioParada"
+
+      >
+        <option value="salario">Atingir salário</option>
+        <option value="montante">Atingir montante</option>
+        <option value="determinadoMesAno">Determinado mês/ano</option>
+      </select>
+    </div>
+
+    <div *ngIf="calculadoraFIIForm.get('criterioParada').value == 'determinadoMesAno'">
+      <div class="form-group">
+        <label for="mesProjecao">Mês para Projeção</label>
+        <input type="month" class="form-control" id="mesProjecao" formControlName="mesProjecao">
+        <small id="mesProjecao" class="form-text text-muted">Escolha o mês final da simulação.</small>
+      </div>
+    </div>
+
+    <div *ngIf="calculadoraFIIForm.get('criterioParada').value == 'salario'">
+      <div class="form-group">
+        <label for="salario">Salário Pretendido</label>
+        <input type="number" class="form-control" id="salario" formControlName="salario">
+        <small id="salario" class="form-text text-muted">Quantidade mensal recebida pelo total de cotas.</small>
+      </div>
+    </div>
+
+    <div *ngIf="calculadoraFIIForm.get('criterioParada').value == 'montante'">
+      <div class="form-group">
+        <label for="montante">Montante Pretendido</label>
+        <input type="number" class="form-control" id="montante" formControlName="montante">
+        <small id="montante" class="form-text text-muted">Quantidade total recebida ao decorrer do tempo pelas cotas.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="comprarCotaComRendimentos"> Comprar mais cotas com rendimentos:</label>
+      <input class="ml-1 form-control-md" type="checkbox" id="comprarCotaComRendimentos" formControlName="comprarCotaComRendimentos">
+
+      <select
+        class="d-block"
+        formControlName="tipoCompraCotaComRendimentos"
+        *ngIf="calculadoraFIIForm.get('comprarCotaComRendimentos').value"
+      >
+        <option value="doMes">Rendimento do mês</option>
+        <option
+          *ngIf="calculadoraFIIForm.get('criterioParada').value != 'montante'"
+          value="acumulado"
+        >
+          Rendimento acumulado
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="">Condicionais</label>
+      <div class="d-flex">
+        <select formControlName="condicionalMes">
+          <option value="0">Jan</option>
+          <option value="1">Fev</option>
+          <option value="2">Mar</option>
+          <option value="3">Abr</option>
+          <option value="4">Mai</option>
+          <option value="5">Jun</option>
+          <option value="6">Jul</option>
+          <option value="7">Ago</option>
+          <option value="8">Set</option>
+          <option value="9">Out</option>
+          <option value="10">Nov</option>
+          <option value="11">Dez</option>
+        </select>
+        <input
+          type="number"
+          class="form-control mx-3 mx-lg-5"
+          formControlName="condicionalNumeroCotas"
+          placeholder="Numero de Cotas"
+        />
+        <button
+          [disabled]="
+            !calculadoraFIIForm.get('condicionalMes').value
+            || calculadoraFIIForm.get('condicionalNumeroCotas').value === ''
+          "
+          type="button"
+          (click)="adicionarCondicional()"
+          class="btn btn-primary"
+        >
+          +
+        </button>
+      </div>
+      <small class="form-text text-muted">Quantidade de cotas compradas nesse mês específico.</small>
+      <div class="d-md-flex d-block">
+        <app-chip
+          *ngFor="let condicional of condicionais"
+          class="d-block m-2"
+          [mes]="condicional.mes"
+          [numeroCotas]="condicional.numeroCotas"
+          (removerCondicionalEvent)="removerCondicional($event)"
+        ></app-chip>
+      </div>
+    </div>
+
+    <button [disabled]="calculadoraFIIForm.invalid" type="button" (click)="calcularSimulacao()" class="btn btn-primary btn-block">Calcular</button>
+    <button type="button" (click)="limparFormulario()" class="btn btn-secondary btn-block">Limpar</button>
+  </form>
+
+  <app-show-results
+    class="container"
+    *ngIf="rendimentos.length"
+    [rendimentos]="rendimentos"
+    [form]="getFormValues()"
+    (novaSimulacaoEvent)="novaSimulacao()"
+  ></app-show-results>
+</div>
